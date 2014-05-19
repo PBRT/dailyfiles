@@ -1,0 +1,200 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+  <title>My Page</title> 
+  <meta name="viewport" content="width=device-width, initial-scale=1"> 
+  <link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.2/jquery.mobile-1.1.2.min.css" />
+  <link rel="stylesheet" href="styles/idangerous.swiper.css">
+  <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+  <script src="http://code.jquery.com/mobile/1.1.2/jquery.mobile-1.1.2.min.js"></script>
+  <script src="js/idangerous.swiper-2.1.min.js"></script>
+   <style>
+/* Demo Styles */
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.swiper-container {
+  width: 270px;
+  height: 250px;
+  color: #fff;
+  text-align: center;
+}
+.red-slide {
+  background: #ca4040;
+}
+.blue-slide {
+  background: #4390ee;
+}
+.orange-slide {
+  background: #ff8604;
+}
+.green-slide {
+  background: #49a430;
+}
+.pink-slide {
+  background: #973e76;
+}
+.swiper-slide .title {
+  font-style: italic;
+  font-size: 42px;
+  margin-top: 80px;
+  margin-bottom: 0;
+  line-height: 45px;
+}
+.swiper-slide p {
+  font-style: italic;
+  font-size: 25px;
+}
+.pagination {
+  position: absolute;
+  z-index: 20;
+  left: 10px;
+  bottom: 10px;
+}
+.swiper-pagination-switch {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 8px;
+  background: #555;
+  margin-right: 5px;
+  opacity: 0.8;
+  border: 1px solid #fff;
+  cursor: pointer;
+}
+.swiper-active-switch {
+  background: #fff;
+}
+.swiper-dynamic-links {
+  text-align: center;
+}
+.swiper-dynamic-links a {
+  display: inline-block;
+  padding: 5px;
+  border-radius: 3px;
+  border: 1px solid #ccc;
+  margin: 5px;
+  font-size: 12px;
+  text-decoration: none;
+  color: #333;
+  background: #eee;
+}
+  </style>
+</head> 
+<body> 
+
+<div data-role="page" data-theme="b">
+
+  <div data-role="header" data-position="fixed">
+    <h1>FILES XXX</h1>
+    <div class="ui-bar ui-bar-b" style="text-align:center">
+      <h4 id="datePhoto"></h4>
+    </div>
+  </div><!-- /header -->
+  
+  <div data-role="content"> 
+    <div class="swiper-container">
+      <div class="swiper-wrapper ui-body-c "></div>
+    </div>  
+  </div><!-- /content -->
+  
+  <div data-role="footer" data-position="fixed">
+    <h1 id="foot">Comment ...</h1>
+  </div><!-- /footer -->
+
+  </div>
+
+<script>
+
+var dataTable = [];
+var dateTableDate = [];
+var dataTableImage= [];
+var current_id=0;
+var init_id=0;
+
+$(document).ready(function(){
+
+  var mySwiper = $('.swiper-container').swiper({
+    mode : 'horizontal', //Switch to vertical mode
+    speed : 200, //Set animation duration to 500ms
+    freeModeFluid : true, //Enable 'fluid' free mode   
+    onSlideNext : function() {
+      current_id++;
+      $('#foot').text(dataTable[current_id]);
+      $('#datePhoto').text(dateTableDate[current_id]);
+    },
+    onSlidePrev: function() {
+      current_id--;
+      $('#foot').text(dataTable[current_id]);
+      $('#datePhoto').text(dateTableDate[current_id]);
+    },
+  })
+
+  $.get('/loadImage', function(data1){ 
+  dataTable=data1;     
+  var laDate;
+  var newSlide;
+  var today = new Date();
+  var dateImg;
+
+    for(var i=0; i<data1.length; i++){ 
+      console.log(data1[i].image);
+      newSlide = mySwiper.createSlide('<img style="width:270px; height:250px" src=\''+data1[i].image+'\'/>');
+
+      //Check de l'heure pour la dernière arrivée
+      dateImg=new Date(data1[i].date);
+      if(i==data1.length-1){
+        if(today.getDay()==dateImg.getDay()){
+          console.log(data1[i].heure);
+          if(data1[i].heure<today.getHours()){
+            newSlide.append();
+            init_id=data1.length-1;
+          }else{
+            init_id=data1.length-2;
+
+            //L'heure n'est pas encore passé, déclanchement du timer
+            var alarmDate = new Date();
+            alarmDate.setHours(21,33,0);
+           // alarmDate.setHours(data1[i].heure,28,0);
+            window.setTimeout(function(){ 
+              newSlide.append();
+              init_id=data1.length-1;
+              AndroidFunction.notif("Nouveau dossier disponible");
+            }, alarmDate.getTime() - new Date().getTime());
+          }
+        }else{
+          newSlide.append();
+          init_id=data1.length-1;
+        }
+      }else{
+        newSlide.append();   
+      }
+
+
+      
+      laDate=new Date(data1[i].date);
+      dateTableDate[i]=data1[i].dateText;
+      dataTable[i]=data1[i].text;    
+
+    }
+
+
+    mySwiper.swipeTo(init_id);
+    current_id=init_id;
+    
+    $('#foot').text(dataTable[current_id]);
+    $('#datePhoto').text(dateTableDate[current_id]);
+
+
+  })
+  
+
+})
+
+  </script>
+
+</body>
+</html>
