@@ -16,7 +16,7 @@ You can create new images by navigate to http://localhost:1337/createFile and ch
 
 ## DEMO
 You can find a live demonstration at http://dailyfiles.herokuapp.com. For create new images,  http://dailyfiles.herokuapp.com/createFile.
-Try iyt with you PHONE !!
+Try it with you PHONE !
 
 ## TECHNOLOGIES
 This applications use Angular.js, Sails.js, Jquery mobile and mongoDB
