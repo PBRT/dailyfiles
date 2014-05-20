@@ -6,7 +6,7 @@ By connecting to this app, you can see all images uploaded on the app, sort by c
 
 It's a new way to share interresting images with family or friends group. 
 
-The final goal of this app is to receive one image by day, to be surprised. It's still in development.
+The final goal of this app is to receive one image by day on your cell, to be surprised. It's still in development.
 
 
 ## INSTALLATION
@@ -15,7 +15,8 @@ Simply clone this project, run ```npm install``` and then run ```sails lift``` a
 You can create new images by navigate to http://localhost:1337/createFile and check these to http://localhost:1337
 
 ## DEMO
-You can find a live demonstration at http://dailyfiles.herokuapp.com
+You can find a live demonstration at http://dailyfiles.herokuapp.com. For create new images,  http://dailyfiles.herokuapp.com/createFile.
+Try iyt with you PHONE !!
 
 ## TECHNOLOGIES
 This applications use Angular.js, Sails.js, Jquery mobile and mongoDB
